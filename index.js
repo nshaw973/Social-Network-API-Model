@@ -12,10 +12,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(routes);
 
-app.use((req, res) => {
-  res.status(404).end();
-});
-
 db.once('open', () => {
   app.listen(PORT, () => {
     console.log(`API running on localhost://${PORT}!`);
