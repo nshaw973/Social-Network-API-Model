@@ -1,12 +1,11 @@
 {
-  "name": "Social Network API Model",
+  "name": "social-network-api-model",
   "version": "1.0.0",
   "description": "Mongoose back-end API",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
+    "start": "nodemon index.js",
     "seed": "node utils/seed",
     "heroku-postbuild": "node utils/seed.js"
   },
