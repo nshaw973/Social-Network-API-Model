@@ -23,11 +23,13 @@ router.get('/:id', async (req, res) => {
 
 //Post new User
 router.post('/', async (req, res) => {
-  // pOST Request body
-  /*{
-    "username": "Foo Bar",
-    "email": "foo@bar.com"
-    } */
+// pOST Request body
+/*
+{
+"username": "Foo Bar",
+"email": "foo@bar.com"
+} 
+*/
   try {
     const user = await User.create(req.body);
     res.status(200).json(user);
@@ -36,6 +38,7 @@ router.post('/', async (req, res) => {
   }
 });
 // Update current user
+// Can update only the username or the email
 router.put('/:id', async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
