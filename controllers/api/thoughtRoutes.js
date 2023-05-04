@@ -29,11 +29,18 @@ router.post('/', async (req, res) => {
 }
 */
   try {
-    const user = await User.findById(req.body.userId);
-    if (!user && user.username !== req.body.username) {
-      return res.status(404).json({ message: 'Could not find user!' });
-    }
     const thought = await Thought.create(req.body);
+    const user = await User.findByIdAndUpdate(
+      { _id: req.body.userId },
+      { $addToSet: { thoughts: thought._id } },
+      { new: true }
+    );
+    // Makes sure there is a user, and that the username matches the username provided in the thought post
+    if (!user || user.username !== req.body.username) {
+      return res
+        .status(404)
+        .json({ message: 'Thought was created, but user was not found!' });
+    }
     res.status(200).json(thought);
   } catch (err) {
     res.status(500).json({ message: 'Unable to add a thought!' });
@@ -45,7 +52,7 @@ router.put('/:id', async (req, res) => {
   try {
     const thought = await Thought.findOneAndUpdate(
       { _id: req.params.id },
-      { $set: {thoughtText: req.body.thoughtText} },
+      { $set: { thoughtText: req.body.thoughtText } },
       { runValidators: true, new: true }
     );
     res.status(200).json(thought);
@@ -60,16 +67,19 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const thought = await Thought.findOneAndRemove(req.params.id);
-    if (!thought) {
+    const user = await User.findOneAndUpdate(
+      { username: thought.username },
+      { $pull: { thoughts: thought._id } },
+      { new: true }
+    );
+    if (!thought || !user) {
       return res.status(404).json({
         message: 'Could not find the thought associated with provided id!',
       });
     }
-    res
-      .status(200)
-      .json({
-        message: `Thought by ${thought.username} has been successfully deleted!`,
-      });
+    res.status(200).json({
+      message: `Thought by ${thought.username} has been successfully deleted!`,
+    });
   } catch (err) {
     res
       .status(500)
