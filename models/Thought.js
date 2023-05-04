@@ -12,6 +12,9 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
+      get: function (date) {
+        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+      },
     },
     username: {
       type: String,
@@ -28,9 +31,11 @@ const thoughtSchema = new Schema(
   }
 );
 
+// Virtual to display the reactionCount based on the length of the Array
 thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });
+
 const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;
