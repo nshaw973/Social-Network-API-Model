@@ -19,15 +19,17 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Not Working
-router.post('/', async (req, res) => {
-  /* 
+// Create Thoughts
+// Thought Body for Insomnia
+/* 
 {
   "thoughtText": "Here's a cool thought...",
   "username": "lernantino",
   "userId": "5edff358a0fcb779aa7b118b"
 }
 */
+router.post('/', async (req, res) => {
+
   try {
     const thought = await Thought.create(req.body);
     const user = await User.findByIdAndUpdate(
@@ -95,7 +97,6 @@ router.delete('/:id', async (req, res) => {
 "username": "username"
 }
 */
-
 router.post('/:thoughtId/reactions', async (req, res) => {
   try {
     const thought = await Thought.findOneAndUpdate(
@@ -110,15 +111,19 @@ router.post('/:thoughtId/reactions', async (req, res) => {
       .json({ message: 'Error, unable to post reaction to thought' });
   }
 });
-
+// Delete Reaction
 router.delete('/:thoughtId/reactions', async (req, res) => {
   try {
-    const thought = await Thought.findOneAndUpdate(
+    const thought = await Thought.findByIdAndUpdate(
       { _id: req.params.thoughtId },
-      { $pull: { reactions: req.body.reactionId } },
+      { $pull: { reactions: { reactionId: req.body.reactionId} } },
       { new: true }
     );
-    res.status(200).json(thought)
+    console.log(thought)
+    if (!thought) {
+      res.status(404).json({ message: 'Thought or Reaction not found!' })
+    }
+    res.status(200).json({ message: `Reaction has been deleted!` })
   } catch (err) {
     res
       .status(500)

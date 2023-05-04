@@ -110,13 +110,11 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
 // Same code as before, jsut with the delete method, and $pull functionality
 router.delete('/:userId/friends/:friendId', async (req, res) => {
   try {
-    // This is the person being added as a friend
     const friend = await User.findByIdAndUpdate(
       { _id: req.params.friendId },
       { $pull: { friends: req.params.userId } },
       { new: true }
     );
-    // this is the user who is gaining that friend.
     const user = await User.findByIdAndUpdate(
       { _id: req.params.userId },
       { $pull: { friends: friend._id } },
