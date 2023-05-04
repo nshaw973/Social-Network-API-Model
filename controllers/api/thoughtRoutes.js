@@ -87,4 +87,26 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// Reaction Routes
+
+router.post('/:thoughtId/reactions', async (req, res) => {
+  /* 
+{
+"reactionBody": "text goes here", 
+"username": "username"
+}
+*/
+  try {
+    const thought = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $addToSet: { reactions: req.body } },
+      { new: true }
+    );
+    res.status(200).json(thought)
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: 'Error, unable to post reaction to thought' });
+  }
+});
 module.exports = router;
