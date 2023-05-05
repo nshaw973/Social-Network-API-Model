@@ -6,12 +6,14 @@ const thoughtSchema = new Schema(
     thoughtText: {
       type: String,
       require: true,
+      // Max length and min length in which the the thought text can hold.
       maxlength: 200,
       minlength: 1,
     },
     createdAt: {
       type: Date,
       default: Date.now(),
+      // Returns the date in a mm/dd/yyyy format.
       get: function (date) {
         return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
       },
