@@ -73,7 +73,7 @@ router.delete('/:id', async (req, res) => {
     const user = await User.findOneAndRemove({ _id: req.params.id });
 
     if (!user) {
-      return res.status(404).json({ message: 'No student with ID was found' });
+      return res.status(404).json({ message: 'No user with ID was found' });
     }
     //Added functionality to delete assignments related to user
     // The user has the thought IDs in the thoughts array, and it looks for all the thoughts with the IDs associated inside the user.thoughts array.

@@ -71,7 +71,13 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     // Looks for the thought and deletes is
-    const thought = await Thought.findOneAndRemove(req.params.id);
+    const thought = await Thought.findOneAndRemove({ _id: req.params.id });
+    // Checks to see if the thought doesnt exist. if thought doesn't exist then return an error
+    if (!thought) {
+      return res.status(404).json({
+        message: 'Could not find the thought associated with provided id!',
+      });
+    }
     // We also need to find the user who created the thought and delete the thought from the thoughts array
     const user = await User.findOneAndUpdate(
       // looks for the username that matches the user that created the thought, since usernames are suppose to be unique
@@ -80,11 +86,13 @@ router.delete('/:id', async (req, res) => {
       { $pull: { thoughts: thought._id } },
       { new: true }
     );
-    // Checks to see if the thought or user doesnt exist. if neither exists, then returns an error.
-    if (!thought || !user) {
-      return res.status(404).json({
-        message: 'Could not find the thought associated with provided id!',
-      });
+    if (!user) {
+      return res
+        .status(200)
+        .json({
+          message:
+            'Thought was deleted, but no user was found associated with thought!',
+        });
     }
     res.status(200).json({
       message: `Thought by ${thought.username} has been successfully deleted!`,
@@ -129,7 +137,9 @@ router.delete('/:thoughtId/reactions', async (req, res) => {
     );
     //if the thought doesn't exist then it returns an error.
     if (!thought) {
-      return res.status(404).json({ message: 'Thought or Reaction not found!' });
+      return res
+        .status(404)
+        .json({ message: 'Thought or Reaction not found!' });
     }
     res.status(200).json({ message: `Reaction has been deleted!` });
   } catch (err) {

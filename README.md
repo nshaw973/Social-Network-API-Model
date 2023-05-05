@@ -18,6 +18,8 @@ Technologies in use are:
 
 ## Video Demonstration
 
+[Social Network Backend API Model](https://drive.google.com/file/d/1p8wq2StcBfobocv8wBX5VNUiC1k-T4AF/view)
+
 ## Screenshots
 
 ![Get Users](./images/get-users.PNG)
@@ -28,6 +30,14 @@ Technologies in use are:
 In order to get this application running, you'll need to install Insomnia in order to retrive all the data and create data from the data base.
 You'll then have to run the command "npm install" in order to get the mongoose and express library started.
 After that, run the command "npm start" and then the server will be started in the following local enviornment.
+
+- Once the above criteria has been met, do these in order to populate the empty database
+    - Create a few users user via post route
+    - Add a couple of thoughts
+    - Add reactions to created thoughts
+    - with new users created, you can now add users as friends.
+    - From here you can update and/or delete users, thoughts, friends, and reactions as desired.
+
 ```
 http://localhost:3001/
 ```
